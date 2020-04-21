@@ -1,46 +1,47 @@
 #include "DoubleLinkedList.h"
 
 template<typename dataType>
-DoubleLinkedList::DoubleLinkedList()
+DoubleLinkedList<dataType>::DoubleLinkedList()
 {
     listSize = 0;
     front == NULL;
 }
 
 template<typename dataType>
-DoubleLinkedList::~DoubleLinkedList()
+DoubleLinkedList<dataType>::~DoubleLinkedList()
 {
     //need to have list destroy istelf or something
 }
 
 template<typename dataType>
-unsigned int DoubleLinkedList::getSize()
+unsigned int DoubleLinkedList<dataType>::getSize()
 {
     return listSize;
 }
 
 template<typename dataType>
-bool DoubleLinkedList::isEmpty()
+bool DoubleLinkedList<dataType>::isEmpty()
 {
     return (listSize == 0);
 }
 
 template<typename dataType>
-void DoubleLinkedList::printList()
+void DoubleLinkedList<dataType>::printList()
 {
     ListNode *curr = front;
 
     while(curr != NULL)
     {
-        cout << curr->listData << endl;
+        cout << curr->nodeData << endl;
         curr = curr->next;
     }
 }
 
 template<typename dataType>
-void DoubleLinkedList::insertFront(dataType dataToInsert)
+void DoubleLinkedList<dataType>::insertFront(int dataToInsert)
 {
-    ListNode *node = new ListNode(dataToInsert)
+    ListNode *node = new ListNode(dataToInsert);
+    //node.nodeData = dataToInsert;
 
     if(isEmpty())
     {
@@ -56,9 +57,9 @@ void DoubleLinkedList::insertFront(dataType dataToInsert)
 }
 
 template<typename dataType>
-void DoubleLinkedList::insertBack(dataType dataToInsert)
+void DoubleLinkedList<dataType>::insertBack(int dataToInsert)
 {
-    ListNode *node = new ListNode(dataToInsert)
+    ListNode *node = new ListNode(dataToInsert);
 
     if(isEmpty())
     {
@@ -74,7 +75,21 @@ void DoubleLinkedList::insertBack(dataType dataToInsert)
 }
 
 template<typename dataType>
-void DoubleLinkedList::removeFront(dataType dataToInsert)
+dataType DoubleLinkedList<dataType>::removeFront()
 {
-    //make this, yeah?
+    ListNode *node = front;
+
+    if (front->next == NULL)
+    {
+        back = NULL;
+    }else
+    {
+        front = front->next;
+    }
+
+    node->next = NULL;
+
+    listSize--;
+
+    return node->nodeData;
 }

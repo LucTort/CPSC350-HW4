@@ -1,14 +1,18 @@
+#include <iostream>
+#include <fstream> //Needed to work with files
+#include <string>
 
-template<typename dataType>
+using namespace std;
+
 class ListNode
 {
     public:
-        dataType nodeData;
+        int nodeData;
         ListNode *next;
         ListNode *previous;
 
         ListNode(); //default constructor
-        ListNode(dataType inputData);
+        ListNode(int inputData);
 
       ~ListNode();
 };

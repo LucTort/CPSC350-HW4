@@ -1,29 +1,28 @@
 //Using assignment 3 and in class examples as reference
 
-#include <iostream>
+#include "DoubleLinkedList.cpp"
+
 using namespace std;
 
-template<typename dataType>
 class Queue
 {
     public:
         Queue(); //default constructor
-        Queue(int queSize) //overloaded
-        ~Queue() //destructor
+        ~Queue(); //destructor
 
         //core functions
-        void insert(dataType data); //enqueu
-        dataType remove(); //dequeue
+        void insert(int data); //enqueu
+        int remove(); //dequeue
 
         //aux functions
-        dataType peek();
-        bool isFull();
+        int peek();
         bool isEmpty();
         int getSize();
 
         //vars
-        int front; //aka head
-        int rear; //aka tail
-        int queueSize;
+        // ListNode front; //aka head
+        // ListNode rear; //aka tail
+        int numElements;
 
+        DoubleLinkedList<int> *myLinkedList; //LinkedLists are nice
 };
