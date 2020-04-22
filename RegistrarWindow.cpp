@@ -29,5 +29,5 @@ void RegistrarWindow::updateIsIdle(bool idle)
 void RegistrarWindow::updateIdleTime()
 {
     if (isIdle)
-        {idleTime++;}
+        {idleTime++; cout << "Is idle" << endl;}
 }

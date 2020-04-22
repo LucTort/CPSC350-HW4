@@ -21,7 +21,6 @@
     template<typename dataType>
     void Queue<dataType>::insert(dataType inputData)
     {
-         //add error checking
         myLinkedList->insertBack(inputData);
         ++numElements;
     }
@@ -30,15 +29,25 @@
     dataType Queue<dataType>::remove()
     {
         //error checking
-        --numElements;
-        dataType c = myLinkedList->removeFront();
-        return c;
+
+        if (numElements > 0)
+        {
+            --numElements;
+            dataType c = myLinkedList->removeFront();
+            return c;
+        }else
+        {
+            cout << "Error: Can't remove from an empty queue." << endl;
+        }
     }
 
     template<typename dataType>
     dataType Queue<dataType>::peek()
     {
-        return myLinkedList->peekFront();
+        if (numElements > 0)
+        {
+            return myLinkedList->peekFront();
+        }
     }
 
     template<typename dataType>

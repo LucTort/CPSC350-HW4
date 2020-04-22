@@ -20,26 +20,6 @@
 //  /_/    \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/  
 //                                                   
 
- bool getEmptyWindow(RegistrarWindow windows[], int numOfWindows)
- {
-     for(int x = 0; x < numOfWindows; x++)
-     {
-        if (windows[x].getIsIdle())
-            {return x;}
-     }
-
-     return -1;
- }
-// {
-//     for (int x = 0; x < numRegistrarWindows; ++x)
-//     {
-//         if (availableWindows[x].isHelpingStudent())
-//             {return true;}
-//             //cout << "in loop" << endl;
-//     }
-
-//     return false;
-// }
 
 //      __  ___      _     
 //     /  |/  /___ _(_)___ 
@@ -66,20 +46,53 @@ int main(int argc, char **argv)
 //  /_/ |_|\___/\__,_/\__,_/_/_/ /_/\__, /  /_/   /_/_/\___/ 
 //                                 /____/                    
 
+//     __  ___     __                            ____ __                           
+//    /  |/  /__ _/ /_____   ___ __ _________   / _(_) /__   ___  ___  ___ ___  ___
+//   / /|_/ / _ `/  '_/ -_) (_-</ // / __/ -_) / _/ / / -_) / _ \/ _ \/ -_) _ \(_-<
+//  /_/  /_/\_,_/_/\_\\__/ /___/\_,_/_/  \__/ /_//_/_/\__/  \___/ .__/\__/_//_/___/
+//                                                             /_/                 
+    ifstream inputFile;
+    inputFile.open(argv[1]);
 
+    if (!inputFile.is_open()) //makes sure file opens correctly
+        {
+            cout << "File didn't open properly" << endl;
+            return 1;
+        }
+    inputFile.close();
+
+//     ___                         __                  ___         
+//    / _ | ___  ___  ___ ___  ___/ / ___  ___ _    __/ (_)__  ___ 
+//   / __ |/ _ \/ _ \/ -_) _ \/ _  / / _ \/ -_) |/|/ / / / _ \/ -_)
+//  /_/ |_/ .__/ .__/\__/_//_/\_,_/ /_//_/\__/|__,__/_/_/_//_/\__/ 
+//       /_/  /_/                                                  
     //appends a newline to the file, as per https://stackoverflow.com/questions/6932409/writing-a-string-to-the-end-of-a-file-c
     ofstream output;
     output.open(argv[1], ios::app);
+    
     string str = "\n";
     output << str;
     output.close();
 
-    ifstream inputFile;
+//     ___              __  ____ __   
+//    / _ \___ ___ ____/ / / _(_) /__ 
+//   / , _/ -_) _ `/ _  / / _/ / / -_)
+//  /_/|_|\__/\_,_/\_,_/ /_//_/_/\__/ 
+//                                    
+
     inputFile.open(argv[1]);
+
 
     //reads in data from file, puts it in queue for easier reference
     while (inputFile.get(currentChar)) // loop getting single characters
     {
+        if(!(currentChar == '0' || currentChar == '1' || currentChar == '2' || currentChar == '3' || currentChar == '4' || currentChar == '5' || currentChar == '6' 
+        || currentChar == '7' || currentChar == '8' || currentChar == '9' || '\n' || '\r'))
+        {
+            cout << "Error: Bad data. Only integer values are allowed. \"" << currentChar << "\" is not valid." << endl;
+            return 1;
+        }
+
         if (currentChar != '\n')
             fileInputString += currentChar;
         else
@@ -110,6 +123,12 @@ int main(int argc, char **argv)
 //  /___/\__/\__/\_,_/ .__/ /_/|_|\__/\_, /_/___/\__/_/  \_,_/_/     |__/|__/_/_//_/\_,_/\___/__,__/___/
 //                  /_/              /___/                                                              
 
+    if(fileInputQueue->getSize() < 1) 
+    {
+        cout << "File contains no valid data." << endl; 
+        return 1;
+    }
+
     int numRegistrarWindows = fileInputQueue->remove();
     RegistrarWindow availableWindows[numRegistrarWindows];
     Queue<Stud> *studentsAtWindows = new Queue<Stud>;   //Used to house students at windows
@@ -128,8 +147,14 @@ int main(int argc, char **argv)
         int numStuds = fileInputQueue->remove();
         for(int x = 0; x < numStuds; ++x)
         {
+            if(fileInputQueue->getSize() < 1) 
+                {
+                    cout << "Error: Data not formatted correctly." << endl; 
+                    return 1;
+                }
+
             studentQueue->insert(Stud(clockTick, fileInputQueue->remove()));
-            Stud currentStud = studentQueue->peek();
+            if (studentQueue->getSize() > 0) {Stud currentStud = studentQueue->peek();}
         }
     }
 
@@ -152,63 +177,84 @@ int main(int argc, char **argv)
 
     while(studentQueue->getSize() > 0 || studentsAtWindows->getSize() > 0)//simulation loop
     {
+        cout << "It's time: " << tick << endl << endl;
 
-//    __  __        __     __        ___           _     __                 _      ___         __             
-//   / / / /__  ___/ /__ _/ /____   / _ \___ ___ _(_)__ / /________ _____  | | /| / (_)__  ___/ /__ _    _____
-//  / /_/ / _ \/ _  / _ `/ __/ -_) / , _/ -_) _ `/ (_-</ __/ __/ _ `/ __/  | |/ |/ / / _ \/ _  / _ \ |/|/ (_-<
-//  \____/ .__/\_,_/\_,_/\__/\__/ /_/|_|\__/\_, /_/___/\__/_/  \_,_/_/     |__/|__/_/_//_/\_,_/\___/__,__/___/
-//      /_/                                /___/                                                              
+//     ______          __      __                           _         __          
+//    / __/ /___ _____/ /__   / /__ ___ __  _____   _    __(_)__  ___/ /__ _    __
+//   _\ \/ __/ // / _  (_-<  / / -_) _ `/ |/ / -_) | |/|/ / / _ \/ _  / _ \ |/|/ /
+//  /___/\__/\_,_/\_,_/___/ /_/\__/\_,_/|___/\__/  |__,__/_/_//_/\_,_/\___/__,__/ 
+//                                                                                
+
+    while(studentsAtWindows->getSize() > 0)
+    {
+        Stud currentStud = studentsAtWindows->remove(); //dequeues student so they can be "processed" *malicious chuckles*
+
+        if (currentStud.getRemainingTicksNeeded() <= 0)//checks if student has been helped for their time
+        {
+            cout << currentStud.getAssignedWindow() << endl;
+            availableWindows[currentStud.getAssignedWindow()].updateIsIdle(true);
+            studentWaitTimes->insert(tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded()); //add to student wait time queue
+            cout << endl <<"students at windowz:"<< studentsAtWindows->getSize() << endl << endl;
+        }else
+        {
+            helpedStudents->insert(currentStud);
+        }
+        
+    }
+
+    while(helpedStudents->getSize() > 0)
+    {
+        studentsAtWindows->insert(helpedStudents->remove());
+    }
+
+//     ___       __        __          __           __           _         __             
+//    / _ \__ __/ /_  ___ / /___ _____/ /__   ___ _/ /_  _    __(_)__  ___/ /__ _    _____
+//   / ___/ // / __/ (_-</ __/ // / _  (_-<  / _ `/ __/ | |/|/ / / _ \/ _  / _ \ |/|/ (_-<
+//  /_/   \_,_/\__/ /___/\__/\_,_/\_,_/___/  \_,_/\__/  |__,__/_/_//_/\_,_/\___/__,__/___/
+//                                                                                        
         for(int x = 0; x < numRegistrarWindows; ++x)
         {
-
-            Stud nextStud = studentQueue->peek();//get next student
-
-            if (availableWindows[x].getIsIdle() 
-                && studentQueue->getSize() > 0 \
-                && nextStud.getTickToArrive() <= tick 
-                && getEmptyWindow(availableWindows, numRegistrarWindows) != -1)//if window is idle -- insert student
+            if (studentQueue->getSize() > 0)//if there is a student
             {
-                cout << "Put studs in" << endl;
-                nextStud = studentQueue->remove();//deque the student
-                studentsAtWindows->insert(nextStud);
-                availableWindows[getEmptyWindow(availableWindows, numRegistrarWindows)].updateIsIdle(false);//mark window as occupied
+                Stud nextStud = studentQueue->peek();
 
-            }
+                if (availableWindows[x].getIsIdle() && nextStud.getTickToArrive() <= tick)//if this window is idle and the student can arrive
+                {
+                    cout << "Put stud in window: " << x << endl;
+                    studentQueue->remove();//deque the student
+                    nextStud.assignWindow(x);
+                    studentsAtWindows->insert(nextStud); //insert them in window queue
+                    availableWindows[x].updateIsIdle(false);//mark window as occupied
+                }
+            }       
+        }
 
+//    _      ___         __             _    ____      __  _          
+//   | | /| / (_)__  ___/ /__ _    __  (_)__/ / /__   / /_(_)_ _  ___ 
+//   | |/ |/ / / _ \/ _  / _ \ |/|/ / / / _  / / -_) / __/ /  ' \/ -_)
+//   |__/|__/_/_//_/\_,_/\___/__,__/ /_/\_,_/_/\__/  \__/_/_/_/_/\__/ 
+//                                                                    
+        for(int x = 0; x < numRegistrarWindows; ++x)
+        {
+            cout << "window " << x << " ";
             availableWindows[x].updateIdleTime();
         }
 
-//    __  __        __     __        ______          __         __             __    _      ___         __          
-//   / / / /__  ___/ /__ _/ /____   / __/ /___ _____/ /__ ___  / /____   ___ _/ /_  | | /| / (_)__  ___/ /__ _    __
-//  / /_/ / _ \/ _  / _ `/ __/ -_) _\ \/ __/ // / _  / -_) _ \/ __(_-<  / _ `/ __/  | |/ |/ / / _ \/ _  / _ \ |/|/ /
-//  \____/ .__/\_,_/\_,_/\__/\__/ /___/\__/\_,_/\_,_/\__/_//_/\__/___/  \_,_/\__/   |__/|__/_/_//_/\_,_/\___/__,__/ 
-//      /_/     
+
+//     ______          __         __                             __  __  _                  __           _         __          
+//    / __/ /___ _____/ /__ ___  / /____   ___ ___  ___ ___  ___/ / / /_(_)_ _  ___   ___ _/ /_  _    __(_)__  ___/ /__ _    __
+//   _\ \/ __/ // / _  / -_) _ \/ __(_-<  (_-</ _ \/ -_) _ \/ _  / / __/ /  ' \/ -_) / _ `/ __/ | |/|/ / / _ \/ _  / _ \ |/|/ /
+//  /___/\__/\_,_/\_,_/\__/_//_/\__/___/ /___/ .__/\__/_//_/\_,_/  \__/_/_/_/_/\__/  \_,_/\__/  |__,__/_/_//_/\_,_/\___/__,__/ 
+//                                          /_/                                                                                
 
         while(studentsAtWindows->getSize() > 0)
         {
-            cout << endl <<"students at window1:"<< studentsAtWindows->getSize() << endl << endl;
-
             Stud currentStud = studentsAtWindows->remove(); //dequeues student so they can be "processed" *malicious chuckles*
-
-            //cout << endl <<"students at window2:"<< studentsAtWindows->getSize() << endl << endl;
 
             cout << currentStud.getRemainingTicksNeeded() << endl;
 
-            //cout << endl <<"students at window3:"<< studentsAtWindows->getSize() << endl << endl;
-
-            if (currentStud.getRemainingTicksNeeded() > 0)//checks if student has been helped for their time
-                {//if not, puts student back in window proces sing
-                    currentStud.decreaseRemainingTicksNeeded();
-                    helpedStudents->insert(currentStud);
-                }
-            else//otherwise doesn't put them back in queue, and updates the window they were at to be free
-                {
-                    availableWindows[currentStud.getAssignedWindow()].updateIsIdle(true);
-                    cout << "Added"<<endl << "wait: " << tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded() << endl;
-                    studentWaitTimes->insert(tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded()); //add to student wait time queue
-                }
-
-            cout << endl <<"students at windowz:"<< studentsAtWindows->getSize() << endl << endl;
+            currentStud.decreaseRemainingTicksNeeded();
+            helpedStudents->insert(currentStud);
         }
 
         while(helpedStudents->getSize() > 0)
@@ -220,9 +266,9 @@ int main(int argc, char **argv)
 
         //cout << "goign" << endl;
 
-        cout << endl <<"Students at windows at end: "<< studentsAtWindows->getSize() << endl << endl;
+        cout << endl <<"Students at windows: "<< studentsAtWindows->getSize() << endl;
 
-        cout << endl << "Students in queue at end: " << studentQueue->getSize() << endl << endl;
+        cout << endl << "Students in queue: " << studentQueue->getSize() << endl;
 
         tick++;
 
@@ -251,19 +297,66 @@ int main(int argc, char **argv)
 
     for (int x = 0; x < numStudWaitTimes; ++x)//puts values in array, and gets other data
     {
-        cout << studentWaitTimes->peek() << endl;
-        if(studentWaitTimes->peek() > largestStudWaitTime)
-            {largestStudWaitTime = studentWaitTimes->peek();}
+        if (studentWaitTimes->getSize() > 0)
+        {
+            if(studentWaitTimes->peek() > largestStudWaitTime)
+                {largestStudWaitTime = studentWaitTimes->peek();}
+        }
 
         totalStudWaitTime += studentWaitTimes->peek();
 
-        if(studentWaitTimes->peek() > 10)
-            {studsWaitingOverTenMin++;}
+        if (studentWaitTimes->getSize() > 0)
+        {
+            if(studentWaitTimes->peek() > 10)
+                {studsWaitingOverTenMin++;}
+        }
 
         studWaitTimeArray[x] = studentWaitTimes->remove();
     }
 
     double meanStudWaitTime = ((double) totalStudWaitTime / (double) numStudWaitTimes);
+
+//                  ___         
+//    __ _  ___ ___/ (_)__ ____ 
+//   /  ' \/ -_) _  / / _ `/ _ \
+//  /_/_/_/\__/\_,_/_/\_,_/_//_/
+//                              
+
+    //sort the student times
+    bool isSorted = false;
+    while(!isSorted)
+    {
+        isSorted = true;
+
+        for(int x = 0; x < numStudWaitTimes - 1; ++x)
+        {
+            if (studWaitTimeArray[x] > studWaitTimeArray[x + 1])
+                {
+                    int temp = studWaitTimeArray[x];
+                    studWaitTimeArray[x] = studWaitTimeArray[x + 1];
+                    studWaitTimeArray[x + 1] = temp;
+                    isSorted = false;
+                }
+        }
+    }
+
+    for(int x = 0; x < numStudWaitTimes; ++x)
+        {
+            cout << studWaitTimeArray[x] << " ";
+        }
+
+    //pick the median value
+    double medianStudentWaitTime = 0;
+    if((numStudWaitTimes % 2) == 1) //it it's odd
+    {
+        medianStudentWaitTime = studWaitTimeArray[numStudWaitTimes / 2];
+    }else
+    {
+        int leftValue = studWaitTimeArray[(numStudWaitTimes / 2) - 1];
+        int rightValue = studWaitTimeArray[numStudWaitTimes / 2];
+        medianStudentWaitTime = (((double) rightValue + (double) leftValue) / 2);
+    }
+    
 
 //    _      ___         __                __     __      
 //   | | /| / (_)__  ___/ /__ _    __  ___/ /__ _/ /____ _
@@ -297,7 +390,7 @@ int main(int argc, char **argv)
 
     cout << endl << "Calculated Student Data:" << endl << endl;
     cout << "Mean student wait time: " << meanStudWaitTime << endl;
-    //need median
+    cout << "Median student wait time: " << medianStudentWaitTime << endl;
     cout << "Longest student wait time: " << largestStudWaitTime << endl;
     cout << "Students waiting over ten minutes: " << studsWaitingOverTenMin << endl;
 
@@ -316,7 +409,9 @@ int main(int argc, char **argv)
     
     
 
-
-}//end of main
-
-
+//                _                    __
+//    __ _  ___ _(_)__    ___ ___  ___/ /
+//   /  ' \/ _ `/ / _ \  / -_) _ \/ _  / 
+//  /_/_/_/\_,_/_/_//_/  \__/_//_/\_,_/  
+//                                       
+}
