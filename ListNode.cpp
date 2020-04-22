@@ -1,19 +1,22 @@
 #include "ListNode.h"
 
-ListNode::ListNode()
+template<typename dataType>
+ListNode<dataType>::ListNode()
 {
     next = NULL;
     previous = NULL;
 }
 
-ListNode::ListNode(int inputData)
+template<typename dataType>
+ListNode<dataType>::ListNode(dataType inputData)
 {
     nodeData = inputData;
     next = NULL;
     previous = NULL;
 }
 
-ListNode::~ListNode()
+template<typename dataType>
+ListNode<dataType>::~ListNode()
 {
-    
+
 }

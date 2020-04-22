@@ -28,7 +28,7 @@ bool DoubleLinkedList<dataType>::isEmpty()
 template<typename dataType>
 void DoubleLinkedList<dataType>::printList()
 {
-    ListNode *curr = front;
+    ListNode<dataType> *curr = front;
 
     while(curr != NULL)
     {
@@ -38,9 +38,9 @@ void DoubleLinkedList<dataType>::printList()
 }
 
 template<typename dataType>
-void DoubleLinkedList<dataType>::insertFront(int dataToInsert)
+void DoubleLinkedList<dataType>::insertFront(dataType dataToInsert)
 {
-    ListNode *node = new ListNode(dataToInsert);
+    ListNode<dataType> *node = new ListNode<dataType>(dataToInsert);
     //node.nodeData = dataToInsert;
 
     if(isEmpty())
@@ -57,9 +57,9 @@ void DoubleLinkedList<dataType>::insertFront(int dataToInsert)
 }
 
 template<typename dataType>
-void DoubleLinkedList<dataType>::insertBack(int dataToInsert)
+void DoubleLinkedList<dataType>::insertBack(dataType dataToInsert)
 {
-    ListNode *node = new ListNode(dataToInsert);
+    ListNode<dataType> *node = new ListNode<dataType>(dataToInsert);
 
     if(isEmpty())
     {
@@ -77,7 +77,7 @@ void DoubleLinkedList<dataType>::insertBack(int dataToInsert)
 template<typename dataType>
 dataType DoubleLinkedList<dataType>::removeFront()
 {
-    ListNode *node = front;
+    ListNode<dataType> *node = front;
 
     if (front->next == NULL)
     {
@@ -91,5 +91,12 @@ dataType DoubleLinkedList<dataType>::removeFront()
 
     listSize--;
 
+    return node->nodeData;
+}
+
+template<typename dataType>
+dataType DoubleLinkedList<dataType>::peekFront()
+{
+    ListNode<dataType> *node = front;
     return node->nodeData;
 }

@@ -4,6 +4,7 @@
 
 using namespace std;
 
+template<typename dataType>
 class Queue
 {
     public:
@@ -11,11 +12,11 @@ class Queue
         ~Queue(); //destructor
 
         //core functions
-        void insert(int data); //enqueu
-        int remove(); //dequeue
+        void insert(dataType data); //enqueu
+        dataType remove(); //dequeue
 
         //aux functions
-        int peek();
+        dataType peek();
         bool isEmpty();
         int getSize();
 
@@ -24,5 +25,5 @@ class Queue
         // ListNode rear; //aka tail
         int numElements;
 
-        DoubleLinkedList<int> *myLinkedList; //LinkedLists are nice
+        DoubleLinkedList<dataType> *myLinkedList; //LinkedLists are nice
 };

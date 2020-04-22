@@ -2,41 +2,53 @@
 
 #include "Queue.h"
 
-    Queue::Queue()
+    template<typename dataType>
+    Queue<dataType>::Queue()
     {
         numElements = 0;
-        myLinkedList = new DoubleLinkedList<int>;
-        ListNode* next;
+        myLinkedList = new DoubleLinkedList<dataType>;
+        ListNode<dataType>* next;
 
 
     }
 
-    Queue::~Queue()
+    template<typename dataType>
+    Queue<dataType>::~Queue()
     {
         //needs to be filled in
     }
 
-    void Queue::insert(int inputData)
+    template<typename dataType>
+    void Queue<dataType>::insert(dataType inputData)
     {
          //add error checking
         myLinkedList->insertBack(inputData);
         ++numElements;
     }
 
-    int Queue::remove()
+    template<typename dataType>
+    dataType Queue<dataType>::remove()
     {
         //error checking
         --numElements;
-        int c = myLinkedList->removeFront();
+        dataType c = myLinkedList->removeFront();
         return c;
     }
 
-    bool Queue::isEmpty()
+    template<typename dataType>
+    dataType Queue<dataType>::peek()
+    {
+        return myLinkedList->peekFront();
+    }
+
+    template<typename dataType>
+    bool Queue<dataType>::isEmpty()
     {
         return (numElements == 0);   
     }
 
-    int Queue::getSize()
+    template<typename dataType>
+    int Queue<dataType>::getSize()
     {
         return numElements;
     }
