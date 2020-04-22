@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 //  /_/ |_|\__,_/_/ /_/   /____/_/_/ /_/ /_/\__,_/_/\__,_/\__/_/\____/_/ /_/ 
 
     int tick = 0;
-    Queue<int> *studentWaitTimes = new Queue<int>;
+    Queue<int> *studentWaitTimes = new Queue<int>;  //stores data about how long students waited in line
     Queue<Stud> *helpedStudents = new Queue<Stud>;   //Queue used to house studs after they've been "processed" *evil laughter*
 
     while(studentQueue->getSize() > 0 || studentsAtWindows->getSize() > 0)//simulation loop
@@ -174,6 +174,8 @@ int main(int argc, char **argv)
                 availableWindows[getEmptyWindow(availableWindows, numRegistrarWindows)].updateIsIdle(false);//mark window as occupied
 
             }
+
+            availableWindows[x].updateIdleTime();
         }
 
 //    __  __        __     __        ______          __         __             __    _      ___         __          
@@ -181,13 +183,6 @@ int main(int argc, char **argv)
 //  / /_/ / _ \/ _  / _ `/ __/ -_) _\ \/ __/ // / _  / -_) _ \/ __(_-<  / _ `/ __/  | |/ |/ / / _ \/ _  / _ \ |/|/ /
 //  \____/ .__/\_,_/\_,_/\__/\__/ /___/\__/\_,_/\_,_/\__/_//_/\__/___/  \_,_/\__/   |__/|__/_/_//_/\_,_/\___/__,__/ 
 //      /_/     
-
-//   _       __           __   _                               __           __                 
-//  | |     / /___  _____/ /__(_)___  ____ _   __  ______     / /_____     / /_  ___  ________ 
-//  | | /| / / __ \/ ___/ //_/ / __ \/ __ `/  / / / / __ \   / __/ __ \   / __ \/ _ \/ ___/ _ \
-//  | |/ |/ / /_/ / /  / ,< / / / / / /_/ /  / /_/ / /_/ /  / /_/ /_/ /  / / / /  __/ /  /  __/
-//  |__/|__/\____/_/  /_/|_/_/_/ /_/\__, /   \__,_/ .___/   \__/\____/  /_/ /_/\___/_/   \___/ 
-//                                 /____/        /_/      
 
         while(studentsAtWindows->getSize() > 0)
         {
@@ -209,6 +204,7 @@ int main(int argc, char **argv)
             else//otherwise doesn't put them back in queue, and updates the window they were at to be free
                 {
                     availableWindows[currentStud.getAssignedWindow()].updateIsIdle(true);
+                    cout << "Added"<<endl << "wait: " << tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded() << endl;
                     studentWaitTimes->insert(tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded()); //add to student wait time queue
                 }
 
@@ -219,6 +215,8 @@ int main(int argc, char **argv)
         {
             studentsAtWindows->insert(helpedStudents->remove());
         }
+
+
 
         //cout << "goign" << endl;
 
@@ -239,13 +237,19 @@ int main(int argc, char **argv)
 //  \____/\__,_/_/\___/\__,_/_/\__,_/\__/\___/    /_/ /_/ /_/\__,_/\__/   /____/\__/\__,_/_/ /_/     
 //                                                                                                   
 
+//     ______          __     __     __      
+//    / __/ /___ _____/ / ___/ /__ _/ /____ _
+//   _\ \/ __/ // / _  / / _  / _ `/ __/ _ `/
+//  /___/\__/\_,_/\_,_/  \_,_/\_,_/\__/\_,_/ 
+//                                           
+
     int largestStudWaitTime = 0;
     int totalStudWaitTime = 0;
     int studsWaitingOverTenMin = 0;
-    int numStudentWaitTimes = studentWaitTimes->getSize();
-    int studWaitTimeArray [numStudentWaitTimes];
+    int numStudWaitTimes = studentWaitTimes->getSize();
+    int studWaitTimeArray [numStudWaitTimes];
 
-    for (int x = 0; x < numStudentWaitTimes; ++x)//puts values in array, and gets other data
+    for (int x = 0; x < numStudWaitTimes; ++x)//puts values in array, and gets other data
     {
         cout << studentWaitTimes->peek() << endl;
         if(studentWaitTimes->peek() > largestStudWaitTime)
@@ -259,7 +263,58 @@ int main(int argc, char **argv)
         studWaitTimeArray[x] = studentWaitTimes->remove();
     }
 
-    cout << totalStudWaitTime << endl;
+    double meanStudWaitTime = ((double) totalStudWaitTime / (double) numStudWaitTimes);
+
+//    _      ___         __                __     __      
+//   | | /| / (_)__  ___/ /__ _    __  ___/ /__ _/ /____ _
+//   | |/ |/ / / _ \/ _  / _ \ |/|/ / / _  / _ `/ __/ _ `/
+//   |__/|__/_/_//_/\_,_/\___/__,__/  \_,_/\_,_/\__/\_,_/ 
+//            
+
+    int longestWindowIdleTime = 0;
+    int totalWindowIdleTime = 0;
+    int numWindowsIdleOverFiveMin = 0;
+
+    for(int x = 0; x < numRegistrarWindows; ++x)
+    {
+        totalWindowIdleTime += availableWindows[x].getIdleTime();
+
+        if (availableWindows[x].getIdleTime() > longestWindowIdleTime)
+            {longestWindowIdleTime = availableWindows[x].getIdleTime();}
+
+        if (availableWindows[x].getIdleTime() > 5)
+            {numWindowsIdleOverFiveMin++;}
+    }
+
+    double meanWindowIdleTime = ((double) totalWindowIdleTime / (double) numRegistrarWindows);
+
+//     ____        __              __     ____        __        __
+//    / __ \__  __/ /_____  __  __/ /_   / __ \____ _/ /_____ _/ /
+//   / / / / / / / __/ __ \/ / / / __/  / / / / __ `/ __/ __ `/ / 
+//  / /_/ / /_/ / /_/ /_/ / /_/ / /_   / /_/ / /_/ / /_/ /_/ /_/  
+//  \____/\__,_/\__/ .___/\__,_/\__/  /_____/\__,_/\__/\__,_(_)   
+//                /_/                                             
+
+    cout << endl << "Calculated Student Data:" << endl << endl;
+    cout << "Mean student wait time: " << meanStudWaitTime << endl;
+    //need median
+    cout << "Longest student wait time: " << largestStudWaitTime << endl;
+    cout << "Students waiting over ten minutes: " << studsWaitingOverTenMin << endl;
+
+    cout << endl << "Calculated Window Data:" << endl << endl;
+    cout << "Mean window idle time: " << meanWindowIdleTime << endl;
+    cout << "Longest window idle time: " << longestWindowIdleTime << endl;
+    cout << "Number of windows idle over 5 minutes: " << numWindowsIdleOverFiveMin << endl;
+
+    cout <<"  __  __             __                    __" << endl;
+    cout <<" / /_/ /  ___ ____  / /__  __ _____  __ __/ /" << endl;
+    cout <<"/ __/ _ \\/ _ `/ _ \\/  '_/ / // / _ \\/ // /_/ " << endl;
+    cout <<"\\__/_//_/\\_,_/_//_/_/\\_\\  \\_, /\\___/\\_,_(_)  " << endl;
+    cout <<"                         /___/               " << endl;
+    cout << endl;
+
+    
+    
 
 
 }//end of main
