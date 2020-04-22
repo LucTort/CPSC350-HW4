@@ -160,16 +160,19 @@ int main(int argc, char **argv)
 //      /_/                                /___/                                                              
         for(int x = 0; x < numRegistrarWindows; ++x)
         {
-            if (availableWindows[x].getIsIdle())//if window is idle -- insert student
-            {
-                Stud nextStud = studentQueue->peek();//get next student
 
-                if (nextStud.getTickToArrive() <= tick && getEmptyWindow(availableWindows, numRegistrarWindows) != -1)//put them in 
-                    {
-                        nextStud = studentQueue->remove();//deque the student
-                        studentsAtWindows->insert(nextStud);
-                        availableWindows[getEmptyWindow(availableWindows, numRegistrarWindows)].updateIsIdle(false);//mark window as occupied
-                    }
+            Stud nextStud = studentQueue->peek();//get next student
+
+            if (availableWindows[x].getIsIdle() 
+                && studentQueue->getSize() > 0 \
+                && nextStud.getTickToArrive() <= tick 
+                && getEmptyWindow(availableWindows, numRegistrarWindows) != -1)//if window is idle -- insert student
+            {
+                cout << "Put studs in" << endl;
+                nextStud = studentQueue->remove();//deque the student
+                studentsAtWindows->insert(nextStud);
+                availableWindows[getEmptyWindow(availableWindows, numRegistrarWindows)].updateIsIdle(false);//mark window as occupied
+
             }
         }
 
@@ -188,13 +191,15 @@ int main(int argc, char **argv)
 
         while(studentsAtWindows->getSize() > 0)
         {
-            cout << endl <<"students at window:"<< studentsAtWindows->getSize() << endl << endl;
+            cout << endl <<"students at window1:"<< studentsAtWindows->getSize() << endl << endl;
 
             Stud currentStud = studentsAtWindows->remove(); //dequeues student so they can be "processed" *malicious chuckles*
 
-            cout << endl <<"students at window:"<< studentsAtWindows->getSize() << endl << endl;
+            //cout << endl <<"students at window2:"<< studentsAtWindows->getSize() << endl << endl;
 
             cout << currentStud.getRemainingTicksNeeded() << endl;
+
+            //cout << endl <<"students at window3:"<< studentsAtWindows->getSize() << endl << endl;
 
             if (currentStud.getRemainingTicksNeeded() > 0)//checks if student has been helped for their time
                 {//if not, puts student back in window proces sing
@@ -206,8 +211,14 @@ int main(int argc, char **argv)
                     availableWindows[currentStud.getAssignedWindow()].updateIsIdle(true);
                     studentWaitTimes->insert(tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded()); //add to student wait time queue
                 }
+
+            cout << endl <<"students at windowz:"<< studentsAtWindows->getSize() << endl << endl;
         }
-        studentsAtWindows = helpedStudents;
+
+        while(helpedStudents->getSize() > 0)
+        {
+            studentsAtWindows->insert(helpedStudents->remove());
+        }
 
         //cout << "goign" << endl;
 
