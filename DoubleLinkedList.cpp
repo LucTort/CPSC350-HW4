@@ -10,7 +10,7 @@ DoubleLinkedList<dataType>::DoubleLinkedList()
 template<typename dataType>
 DoubleLinkedList<dataType>::~DoubleLinkedList()
 {
-    //need to have list destroy istelf or something
+    
 }
 
 template<typename dataType>

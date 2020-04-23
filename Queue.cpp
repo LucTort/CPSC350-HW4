@@ -15,7 +15,7 @@
     template<typename dataType>
     Queue<dataType>::~Queue()
     {
-        //needs to be filled in
+        myLinkedList->~myLinkedList();
     }
 
     template<typename dataType>

@@ -177,7 +177,7 @@ int main(int argc, char **argv)
 
     while(studentQueue->getSize() > 0 || studentsAtWindows->getSize() > 0)//simulation loop
     {
-        cout << "It's time: " << tick << endl << endl;
+        //test  cout << "It's time: " << tick << endl << endl;
 
 //     ______          __      __                           _         __          
 //    / __/ /___ _____/ /__   / /__ ___ __  _____   _    __(_)__  ___/ /__ _    __
@@ -191,10 +191,10 @@ int main(int argc, char **argv)
 
         if (currentStud.getRemainingTicksNeeded() <= 0)//checks if student has been helped for their time
         {
-            cout << currentStud.getAssignedWindow() << endl;
+             //test cout << currentStud.getAssignedWindow() << endl;
             availableWindows[currentStud.getAssignedWindow()].updateIsIdle(true);
             studentWaitTimes->insert(tick - currentStud.getTickToArrive() - currentStud.getStartingTicksNeeded()); //add to student wait time queue
-            cout << endl <<"students at windowz:"<< studentsAtWindows->getSize() << endl << endl;
+            //test  cout << endl <<"students at windowz:"<< studentsAtWindows->getSize() << endl << endl;
         }else
         {
             helpedStudents->insert(currentStud);
@@ -220,7 +220,7 @@ int main(int argc, char **argv)
 
                 if (availableWindows[x].getIsIdle() && nextStud.getTickToArrive() <= tick)//if this window is idle and the student can arrive
                 {
-                    cout << "Put stud in window: " << x << endl;
+                     //test cout << "Put stud in window: " << x << endl;
                     studentQueue->remove();//deque the student
                     nextStud.assignWindow(x);
                     studentsAtWindows->insert(nextStud); //insert them in window queue
@@ -236,8 +236,8 @@ int main(int argc, char **argv)
 //                                                                    
         for(int x = 0; x < numRegistrarWindows; ++x)
         {
-            cout << "window " << x << " ";
-            availableWindows[x].updateIdleTime();
+            if(studentsAtWindows->getSize() > 0 || studentQueue->getSize() > 0) 
+                {availableWindows[x].updateIdleTime();}
         }
 
 
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
         {
             Stud currentStud = studentsAtWindows->remove(); //dequeues student so they can be "processed" *malicious chuckles*
 
-            cout << currentStud.getRemainingTicksNeeded() << endl;
+             //test cout << currentStud.getRemainingTicksNeeded() << endl;
 
             currentStud.decreaseRemainingTicksNeeded();
             helpedStudents->insert(currentStud);
@@ -266,13 +266,13 @@ int main(int argc, char **argv)
 
         //cout << "goign" << endl;
 
-        cout << endl <<"Students at windows: "<< studentsAtWindows->getSize() << endl;
+        //test //cout << endl <<"Students at windows: "<< studentsAtWindows->getSize() << endl;
 
-        cout << endl << "Students in queue: " << studentQueue->getSize() << endl;
+         //test //cout << endl << "Students in queue: " << studentQueue->getSize() << endl;
 
         tick++;
 
-        getchar();
+         //test //getchar();
 
     }//tick loop
 
@@ -342,7 +342,7 @@ int main(int argc, char **argv)
 
     for(int x = 0; x < numStudWaitTimes; ++x)
         {
-            cout << studWaitTimeArray[x] << " ";
+             //test cout << studWaitTimeArray[x] << " ";
         }
 
     //pick the median value
