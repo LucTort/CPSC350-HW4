@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
     if (!inputFile.is_open()) //makes sure file opens correctly
         {
-            cout << "File didn't open properly" << endl;
+            cout << "File didn't open properly -- be sure you entered the name properly" << endl;
             return 1;
         }
     inputFile.close();
@@ -92,20 +92,25 @@ int main(int argc, char **argv)
             cout << "Error: Bad data. Only integer values are allowed. \"" << currentChar << "\" is not valid." << endl;
             return 1;
         }
-
-        if (currentChar != '\n')
-            fileInputString += currentChar;
         else
         {
-            //this converts the string into an integer
-            if (fileInputString != "\0")
+            if (currentChar != '\n')
+                {fileInputString += currentChar;}
+            else
             {
-                if ( ! (istringstream(fileInputString) >> fileInputInt) ) fileInputInt = 0; //as per https://www.cplusplus.com/articles/D9j2Nwbp/
-                fileInputString = "\0";
-                fileInputQueue->insert(fileInputInt);
-                //cout << fileInputInt << endl;
+                //this converts the string into an integer
+                if (fileInputString != "\0")
+                {
+                    if ( ! (istringstream(fileInputString) >> fileInputInt) ) fileInputInt = 0; //as per https://www.cplusplus.com/articles/D9j2Nwbp/
+                    fileInputString = "\0";
+                    fileInputQueue->insert(fileInputInt);
+                    //cout << fileInputInt << endl;
+                }
             }
         }
+        
+
+
     }
 
     //cout << fileInputQueue->getSize() << endl;
@@ -388,13 +393,16 @@ int main(int argc, char **argv)
 //  \____/\__,_/\__/ .___/\__,_/\__/  /_____/\__,_/\__/\__,_(_)   
 //                /_/                                             
 
-    cout << endl << "Calculated Student Data:" << endl << endl;
+    cout << endl << endl << "Calculated Student Data:" << endl;
+    cout << "---------------------------" << endl;
     cout << "Mean student wait time: " << meanStudWaitTime << endl;
     cout << "Median student wait time: " << medianStudentWaitTime << endl;
     cout << "Longest student wait time: " << largestStudWaitTime << endl;
     cout << "Students waiting over ten minutes: " << studsWaitingOverTenMin << endl;
+    cout << endl;
 
-    cout << endl << "Calculated Window Data:" << endl << endl;
+    cout << endl << "Calculated Window Data:" << endl;
+    cout << "---------------------------" << endl;
     cout << "Mean window idle time: " << meanWindowIdleTime << endl;
     cout << "Longest window idle time: " << longestWindowIdleTime << endl;
     cout << "Number of windows idle over 5 minutes: " << numWindowsIdleOverFiveMin << endl;
